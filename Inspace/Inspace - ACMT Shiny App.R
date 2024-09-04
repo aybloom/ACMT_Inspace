@@ -10,6 +10,7 @@ future::plan(multisession)
 source('~/workspace/setup-acmt.R')
 source('external_data-presets.R')
 source('external_data-file_loader.R')
+source('~/workspace/Inspace/summary_tables.R')
 source('~/workspace/Inspace/data_pull_settings/inspace-shinyapp-functions.R')
 source('~/workspace/Inspace/data_pull_settings/inspace_external_data_functions.R')
 source('~/workspace/Inspace/data_pull_settings/cdc_data_settings.R')
@@ -24,8 +25,9 @@ source('~/workspace/Inspace/data_pull_settings/gentrification_data_settings.R')
 source('~/workspace/Inspace/data_pull_settings/nlcd_data_settings.R')
 
 library(dplyr)
+library(magrittr)
 
-data.preview.choices<-c('Show geocoded dataset', 'Show environmental measures data pull', 'Show measure summary', 'Show missingness/count summary')
+data.preview.choices<-c('Show geocoded dataset', 'Show environmental measures data pull', 'Show missingness/count summary')
 
 ### SHINY UI ####
 ui<-shinyUI(
@@ -1624,7 +1626,7 @@ observeEvent(input$pull_walk,{
                     showNotification(e$message, type='warning', id='status_notif')
                   })
   
-  # After the promise has been evaluated set nclicks to 0 to allow for anlother Run
+  # After the promise has been evaluated set nclicks to 0 to allow for another Run
   result <- finally(result,
                     function(){
                       fire_ready() 
@@ -3058,7 +3060,7 @@ observeEvent(input$show_data_rpp, {
   }
   if(input$show_data_rpp=='Show missingness/count summary'& file.exists('~/workspace/Inspace/data_pull_measures/dataset_rpp.csv')==TRUE){
     preview_rpp$data=read.csv('~/workspace/Inspace/data_pull_measures/dataset_rpp.csv')%>%dplyr::select(id, year, everything())%>%
-      dplyr::select(-any_of('X'))%>%dplyr::select(-GEOID_pp, -state_geoid, -msa_geoid, -GeoName)%>% group_by(year) %>% summarise(count_na=sum(is.na(.)), 
+      dplyr::select(-any_of('X'))%>%dplyr::select(-GEOID_pp, -state_geoid, -msa_geoid, -GeoName)%>% group_by(year) %>%dplyr::summarise(count_na=sum(is.na(.)), 
                                                                                                                                count_total=n())%>%arrange(year)
   }
   if(input$show_data_rpp !='Show geocoded dataset' &file.exists('~/workspace/Inspace/data_pull_measures/dataset_rpp.csv')==FALSE){
@@ -3108,7 +3110,7 @@ observeEvent(input$status_rpp,{
   }
   if(input$show_data_rpp=='Show missingness/count summary'& file.exists('~/workspace/Inspace/data_pull_measures/dataset_rpp.csv')==TRUE){
     preview_rpp$data=read.csv('~/workspace/Inspace/data_pull_measures/dataset_rpp.csv')%>%dplyr::select(id, year, everything())%>%
-      dplyr::select(-any_of('X'))%>%dplyr::select(-GEOID_pp, -state_geoid, -msa_geoid, -GeoName)%>% group_by(year) %>% summarise(count_na=sum(is.na(.)), 
+      dplyr::select(-any_of('X'))%>%dplyr::select(-GEOID_pp, -state_geoid, -msa_geoid, -GeoName)%>% group_by(year) %>% dplyr::summarise(count_na=sum(is.na(.)), 
                                                                                                                        count_total=n())%>%arrange(year)
   }
   if(input$show_data_rpp !='Show geocoded dataset' &file.exists('~/workspace/Inspace/data_pull_measures/dataset_rpp.csv')==FALSE){
@@ -3227,7 +3229,7 @@ observeEvent(input$show_data_gentrification, {
   }
   if(input$show_data_gentrification=='Show missingness/count summary'& file.exists('~/workspace/Inspace/data_pull_measures/dataset_gentrification.csv')==TRUE){
     preview_gentrification$data=read.csv('~/workspace/Inspace/data_pull_measures/dataset_gentrification.csv')%>%dplyr::select(id, everything())%>%
-      dplyr::select(-any_of('X'))%>%  summarise(count_na=sum(is.na(.)), count_total=n())
+      dplyr::select(-any_of('X'))%>% dplyr::summarise(count_na=sum(is.na(.)), count_total=n())
   }
   if(input$show_data_gentrification !='Show geocoded dataset' &file.exists('~/workspace/Inspace/data_pull_measures/dataset_gentrification.csv')==FALSE){
     preview_gentrification$data=data.frame(message='Dataframe not yet created, click the Pull data button to create dataset and begin pulling environmental measures')}
@@ -3276,7 +3278,7 @@ observeEvent(input$status_gentrification,{
   }
   if(input$show_data_gentrification=='Show missingness/count summary'& file.exists('~/workspace/Inspace/data_pull_measures/dataset_gentrification.csv')==TRUE){
     preview_gentrification$data=read.csv('~/workspace/Inspace/data_pull_measures/dataset_gentrification.csv')%>%dplyr::select(id, everything())%>%
-      dplyr::select(-any_of('X'))%>% summarise(count_na=sum(is.na(.)), 
+      dplyr::select(-any_of('X'))%>%dplyr::summarise(count_na=sum(is.na(.)), 
                                                                                                                        count_total=n())
   }
   if(input$show_data_gentrification !='Show geocoded dataset' &file.exists('~/workspace/Inspace/data_pull_measures/dataset_gentrification.csv')==FALSE){
@@ -3585,7 +3587,7 @@ progress_summary<-function(){
 }
 
 #show table when the page loads
-progress_summary()
+#progress_summary()
 
 #refresh table with the button
 observeEvent(input$refreshprogress, {

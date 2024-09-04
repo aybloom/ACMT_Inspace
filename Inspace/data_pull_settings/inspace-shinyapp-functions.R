@@ -70,13 +70,13 @@ check_geocode_for_address<-function(lat, long, id, address=address, rate=rating,
 
 
 ## create data pull measures folder if it doesn't exist: 
-if(dir.exists('~/workspace/ACMT_Shiny_App/data_pull_measures')==FALSE){
-  dir.create('~/workspace/ACMT_Shiny_App/data_pull_measures')
+if(dir.exists('~/workspace/Inspace/data_pull_measures')==FALSE){
+  dir.create('~/workspace/Inspace/data_pull_measures')
 }
 
 ## create data pull summaries folder if it doesn't exist: 
-if(dir.exists('~/workspace/ACMT_Shiny_App/data_pull_summaries')==FALSE){
-  dir.create('~/workspace/ACMT_Shiny_App/data_pull_summaries')
+if(dir.exists('~/workspace/Inspace/data_pull_summaries')==FALSE){
+  dir.create('~/workspace/Inspace/data_pull_summaries')
 }
 
 ### save data frame to Inspace Folder ####
@@ -126,13 +126,8 @@ pull_county_geoid<-function(dataset, year=2019){
   #msa_dataset <- merge(dataset_acs %>%dplyr::select(id), intersected_msa, by='id', all=TRUE)%>% dplyr::select(id, #msa_geoid=GEOID)
   county_dataset<-merge(dataset_geocoded%>%dplyr::select(id), intersected_county, by='id', all=TRUE)%>%dplyr::select(id, county_geoid=GEOID, -geometry)%>%unique()
   
-  write.csv(county_dataset, '~/workspace/ACMT_Shiny_App/data_pull_measures/dataset_county.csv')
+  write.csv(county_dataset, '~/workspace/Inspace/data_pull_measures/dataset_county.csv')
 }
-
-
-
-
-
 
 ### Summary Table of environmental measures ####
 table_missingness<-function(dataset) {
@@ -153,6 +148,7 @@ table_missingness<-function(dataset) {
   
 table_summary<-function(dataset) {
   non_summary_vars<-c('id', 'year', 'radius', 'X', 'GeoName')
+  if(nrow(dataset)>0){
   data_summary<-cbind(colnames(dataset)%>% as.data.frame() %>% dplyr::rename(., variable_name=.) %>% dplyr::filter(!(variable_name %in% non_summary_vars)),
                       
         dataset %>% dplyr::select(-(any_of(non_summary_vars))) %>% summarise_all(list(min=min), na.rm=TRUE) %>%t()%>%as.data.frame() %>% round(., digits=2) %>% dplyr::rename(min=V1), 
@@ -160,11 +156,14 @@ table_summary<-function(dataset) {
         dataset %>% dplyr::select(-(any_of(non_summary_vars))) %>% summarise_all(list(median=median), na.rm=TRUE) %>%t()%>%as.data.frame() %>% round(., digits=2)%>% dplyr::rename(median=V1), 
         dataset %>% dplyr::select(-(any_of(non_summary_vars))) %>% summarise_all(~sum(length(which(is.na(.))))) %>%t()%>%as.data.frame() %>% dplyr::rename(NA_count=V1))
   row.names(data_summary)<-NULL
+  }
+  else(
+  data_summary<-NULL)
   return(data_summary)
         
 }
 
-measure.directory<-'~/workspace/ACMT_Shiny_App/data_pull_measures/'
+measure.directory<-'~/workspace/Inspace/data_pull_measures/'
 progress.summary<-function(filename){
   file.path<-paste0(measure.directory, filename)
   if(file.exists(file.path) == FALSE){
