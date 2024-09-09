@@ -124,7 +124,7 @@ print(marrangeGrob(summary_list_plots, nrow=1, ncol=1))
 dev.off()
 }
 
-#create_report_function()
+create_report_function()
 
 
   
