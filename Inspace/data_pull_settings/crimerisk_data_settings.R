@@ -35,8 +35,8 @@ crimerisk_vars <-names(crimerisk_variable_name_to_interpolate_by_sum_boolean_map
 names_of_variables_to_get<-crimerisk_vars
 first_var<-crimerisk_vars[1]
 
-crimerisk_years<-c(2017)
-crimerisk_selected_years<-c(2017)
+crimerisk_years<-c(2022)
+crimerisk_selected_years<-c(2022)
 
 crimerisk_description<-'Applied Geographic Systems publishes a block-group level dataset of ‘crime risk’. 
 This pulls from the FBI’s uniform crime reports and 16000 local law enforcement jurisdictions. 
