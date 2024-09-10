@@ -12,7 +12,7 @@ process_crimerisk<-function() {
     rename(GEOID=BLOCKGROUP, estimate=value) %>%
     mutate(GEOID=ifelse(GEOID<100000000000, as.character(paste0('0', as.character(GEOID), "")), as.character(GEOID))) #convert to GEOID to character for joining data, need to add an extra 0 in front for some values
   
-  processed_dataframe$estimate[is.na(processed_dataframe$estimate)]<-0 #impute NA with 0 values
+  #processed_dataframe$estimate[is.na(processed_dataframe$estimate)]<-0 #impute NA with 0 values
   
   write.csv(processed_dataframe, 'external_data/processed_crimerisk.csv', row.names = FALSE)
 }
