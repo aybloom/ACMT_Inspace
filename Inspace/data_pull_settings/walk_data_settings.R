@@ -1,5 +1,4 @@
 #### Walkability Data Settings -- Inspace ####
-
 external_data_name_to_info_list <- list(
   walkability=external_data_presets_walkability
 )

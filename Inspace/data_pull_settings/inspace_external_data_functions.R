@@ -60,7 +60,6 @@ external_data_loop<-function(dataset=dataset, years=years, radius_vector=radius_
   return(dataset)
   }
 
-
 ## Create Functions for Park Proportion and Distance to park
 
 get_distance_to_shapefile <- function(lat, long, radius_meters, shp_processed){
